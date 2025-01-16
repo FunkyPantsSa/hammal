@@ -6,16 +6,30 @@ Hammal 是运行于 cloudflare workers 上的 Docker 镜像加速工具，用于
 
 首先安装 wrangler 命令行工具 https://developers.cloudflare.com/workers/cli-wrangler/install-update
 
+
+```
+
+npx wrangler  --version
+Proxy environment variables detected. We'll use your proxy for fetch requests.
+
+ ⛅️ wrangler 3.102.0
+--------------------
+
+```
+以下针对wrangler 3.102.0版本部署
+
 ```
 git clone https://github.com/tomwei7/hammal.git
 cd hammal
 mv wrangler.toml.sample wrangler.toml
 
+
 # 获取 account_id id
 wrangler whoami
 
-# 创建 KV namespace
+# 创建 KV namespace，也可以直接在页面上创建复制kv id
 wrangler kv:namespace create hammal_cache
+
 
 ```
 
@@ -34,13 +48,14 @@ kv_namespaces = [
 ]
 ```
 
-发布 workers
+发布 workers，文件夹内执行
 
 ```
-wrangler publish
+npx wrangler  deploy ./src/index.ts  -c wrangler.toml
 ```
 
 发布 workers 可以获得类似 https://hammal.{your_name}.workers.dev  的地址，修改 registry-mirrors 地址为该地址即可
+
 
 ```
 <<EOF sudo tee /etc/docker/daemon.json
@@ -54,7 +69,7 @@ EOF
 
 ### 获取其他镜像源镜像
 
-目前 hammal 支持获取 `k8s.gcr.io`, `gcr.io`, `quay.io` 的镜像，可以通过修改 handler.ts 中的 `ORG_NAME_BACKEND` 添加
+目前 hammal 支持获取 `k8s.gcr.io`, `gcr.io`, `quay.io` , `registry.k8s.io`, `ghcr.io `的镜像，可以通过修改 handler.ts 中的 `ORG_NAME_BACKEND` 添加
 
 ```bash
 # 拉取 k8s.gcr.io 镜像
@@ -65,7 +80,18 @@ docker pull hammal.{your_name}.workers.dev/gcr/youlib/image:tags
 
 # 拉取 quay.io 镜像
 docker pull hammal.{your_name}.workers.dev/quay/coreos/flannel:v0.13.1-rc2
+
+# 拉取 registry.k8s.io镜像
+docker pull hammal.{your_name}.workers.dev/registry-k8s-io/image:tags
+
+# 拉取 ghcr.io 镜像
+docker pull hammal.{your_name}.workers.dev/ghcr-io/image:tags
+
+
+
 ```
+
+
 
 ### TODO
 

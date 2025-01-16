@@ -7,6 +7,10 @@ const ORG_NAME_BACKEND:{ [key: string]: string; } = {
   "gcr": "https://gcr.io",
   "k8sgcr": "https://k8s.gcr.io",
   "quay": "https://quay.io",
+  "registry-k8s-io": "https://registry.k8s.io",
+  "quay-io": "https://quay.io",
+  "ghcr-io": "https://ghcr.io"
+
 }
 
 const DEFAULT_BACKEND_HOST: string = "https://registry-1.docker.io"
